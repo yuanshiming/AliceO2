@@ -79,28 +79,46 @@ void ITSCalibrator<Mapping>::run(ProcessingContext& pc)
     auto orig = Mapping::getOrigin();
     mDecoder->setDecodeNextAuto(false);
 
-    DPLRawParser parser(pc.inputs());
-
-    while (mDecoder->decodeNextTrigger()) {
+    //GBTCalibData calVec;
+    std::vector<GBTCalibData> calVec;
+    
+    while(mDecoder->decodeNextTrigger()) {
+        mDecoder->fillCalibData(calVec);
+        //LOG(INFO) << "calVec: " << calVec.calibUserField;
+        //mDecoder->setFillCalibData
         LOG(INFO) << "mTFCounter: " << mTFCounter << ", TriggerCounter in TF: " << TriggerId << ".";
         LOG(INFO) << "getNChipsFiredROF: " << mDecoder->getNChipsFiredROF() << ", getNPixelsFiredROF: " << mDecoder->getNPixelsFiredROF();
+        LOG(INFO) << "getNChipsFired: " << mDecoder->getNChipsFired() << ", getNPixelsFired: " << mDecoder->getNPixelsFired();
+        
         TriggerId++;
-        for(int loopi = 0; loopi<9; loopi++) {
-            mChipDataBuffer = mDecoder->getNextChipData(mChipsBuffer);
-            LOG(INFO) << "getChipID: " << mChipDataBuffer->getChipID() << ", getROFrame: " << mChipDataBuffer->getROFrame() << ", getTrigger: " << mChipDataBuffer->getTrigger();
-            auto& pixels = mChipDataBuffer->getData();//type:
-            for (auto& pixel : pixels) {
-                if(pixel.isMasked()){
-                    LOG(INFO) << "pixel Col = " << pixel.getCol() << ", pixel Row = " << pixel.getRow() << ", isMasked: " << pixel.isMasked();
-                } else {
-                    if ((pixel.getCol()==0) && (loopi==8)) {
-                        LOG(INFO) << "No masked pixel in this trigger";
-                    }
-                }
-            }
-        //mChipDataBuffer = mDecoder->getNextChipData(mChipsBuffer);
-        }
     }
+
+    LOG(INFO) << "calVec.size(): " << calVec.size();
+
+    for(int loopi = 0; loopi < calVec.size(); loopi++) {
+        LOG(INFO) << "calVec.calibUserField: " << calVec[loopi].calibUserField;
+    }
+
+    //while (mDecoder->decodeNextTrigger()) {
+    //    LOG(INFO) << "mTFCounter: " << mTFCounter << ", TriggerCounter in TF: " << TriggerId << ".";
+    //    LOG(INFO) << "getNChipsFiredROF: " << mDecoder->getNChipsFiredROF() << ", getNPixelsFiredROF: " << mDecoder->getNPixelsFiredROF();
+    //    TriggerId++;
+    //    for(int loopi = 0; loopi<9; loopi++) {
+    //        mChipDataBuffer = mDecoder->getNextChipData(mChipsBuffer);
+    //        LOG(INFO) << "getChipID: " << mChipDataBuffer->getChipID() << ", getROFrame: " << mChipDataBuffer->getROFrame() << ", getTrigger: " << mChipDataBuffer->getTrigger();
+    //        auto& pixels = mChipDataBuffer->getData();//type:
+    //        for (auto& pixel : pixels) {
+    //            if(pixel.isMasked()){
+    //                LOG(INFO) << "pixel Col = " << pixel.getCol() << ", pixel Row = " << pixel.getRow() << ", isMasked: " << pixel.isMasked();
+    //            } else {
+    //                if ((pixel.getCol()==0) && (loopi==8)) {
+    //                    LOG(INFO) << "No masked pixel in this trigger";
+    //                }
+    //            }
+    //        }
+    ////    //mChipDataBuffer = mDecoder->getNextChipData(mChipsBuffer);
+    //    }
+    //}
 
     //decode the raw data and fill hit-map
     //while ((mChipDataBuffer = mDecoder->getNextChipData(mChipsBuffer))) {
