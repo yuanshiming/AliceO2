@@ -82,43 +82,26 @@ void ITSCalibrator<Mapping>::run(ProcessingContext& pc)
     DPLRawParser parser(pc.inputs());
 
     while (mDecoder->decodeNextTrigger()) {
+        
         LOG(INFO) << "mTFCounter: " << mTFCounter << ", TriggerCounter in TF: " << TriggerId << ".";
         LOG(INFO) << "getNChipsFiredROF: " << mDecoder->getNChipsFiredROF() << ", getNPixelsFiredROF: " << mDecoder->getNPixelsFiredROF();
         TriggerId++;
-        for(int loopi = 0; loopi<9; loopi++) {
-            mChipDataBuffer = mDecoder->getNextChipData(mChipsBuffer);
-            LOG(INFO) << "getChipID: " << mChipDataBuffer->getChipID() << ", getROFrame: " << mChipDataBuffer->getROFrame() << ", getTrigger: " << mChipDataBuffer->getTrigger();
-            auto& pixels = mChipDataBuffer->getData();//type:
-            for (auto& pixel : pixels) {
-                if(pixel.isMasked()){
-                    LOG(INFO) << "pixel Col = " << pixel.getCol() << ", pixel Row = " << pixel.getRow() << ", isMasked: " << pixel.isMasked();
-                } else {
-                    if ((pixel.getCol()==0) && (loopi==8)) {
-                        LOG(INFO) << "No masked pixel in this trigger";
-                    }
-                }
-            }
+        //for(int loopi = 0; loopi<9; loopi++) {
+        //    mChipDataBuffer = mDecoder->getNextChipData(mChipsBuffer);
+        //    LOG(INFO) << "getChipID: " << mChipDataBuffer->getChipID() << ", getROFrame: " << mChipDataBuffer->getROFrame() << ", getTrigger: " << mChipDataBuffer->getTrigger();
+        //    auto& pixels = mChipDataBuffer->getData();//type:
+        //    for (auto& pixel : pixels) {
+        //        if(pixel.isMasked()){
+        //            LOG(INFO) << "pixel Col = " << pixel.getCol() << ", pixel Row = " << pixel.getRow() << ", isMasked: " << pixel.isMasked();
+        //        } else {
+        //            if ((pixel.getCol()==0) && (loopi==8)) {
+        //                LOG(INFO) << "No masked pixel in this trigger";
+        //            }
+        //        }
+        //    }
         //mChipDataBuffer = mDecoder->getNextChipData(mChipsBuffer);
-        }
+        //}
     }
-
-    //decode the raw data and fill hit-map
-    //while ((mChipDataBuffer = mDecoder->getNextChipData(mChipsBuffer))) {
-    //  if (mChipDataBuffer) {
-    //    const auto& pixels = mChipDataBuffer->getData();
-    //    //LOG(INFO) << "pixels->getChipID(): " << pixels->getChipID();
-    //    for (auto& pixel : pixels) {
-    //      LOG(INFO) << "Col: " << pixel.getCol() << "Row: " << pixel.getRow();
-    //      mGeom->getChipId(mChipDataBuffer->getChipID(), lay, sta, ssta, mod, chip);
-    //      mHitNumberOfChip[lay][sta][ssta][mod][chip]++;
-    //      if (mHitPixelID_Hash[lay][sta][ssta][mod][chip].find(pixel.getCol() * 1000 + pixel.getRow()) == mHitPixelID_Hash[lay][sta][ssta][mod][chip].end()) {
-    //        mHitPixelID_Hash[lay][sta][ssta][mod][chip][pixel.getCol() * 1000 + pixel.getRow()] = 1;
-    //      } else {
-    //        mHitPixelID_Hash[lay][sta][ssta][mod][chip][pixel.getCol() * 1000 + pixel.getRow()]++;
-    //      }
-    //    }
-    //  }
-    //
 
     //LOG(INFO) << "mTFCounter: " << mTFCounter << ", getNLinks: " << mDecoder->getNLinks() << ", getVerbosity: " << mDecoder->getVerbosity();
     //LOG(INFO) << "getROFrame: " << mChipDataBuffer->getROFrame();
@@ -185,8 +168,8 @@ void ITSCalibrator<Mapping>::run(ProcessingContext& pc)
 
     //mDecoder->printReport(true, true);
 
-    TriggerId = 0;
-    mTFCounter++;
+    //TriggerId = 0;
+    //mTFCounter++;
 }
 
 template <class Mapping>
