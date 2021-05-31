@@ -90,14 +90,24 @@ void ITSCalibrator<Mapping>::run(ProcessingContext& pc)
         LOG(INFO) << "getNChipsFiredROF: " << mDecoder->getNChipsFiredROF() << ", getNPixelsFiredROF: " << mDecoder->getNPixelsFiredROF();
         LOG(INFO) << "getNChipsFired: " << mDecoder->getNChipsFired() << ", getNPixelsFired: " << mDecoder->getNPixelsFired();
         
+        for(int loopi = 0; loopi < calVec.size(); loopi++) {
+            uint64_t tmp = calVec[loopi].calibUserField;
+            if((tmp != 0) && (tmp != calVec[loopi-1].calibUserField)) {
+                LOG(INFO) << "calVec.calibUserField: " << tmp;
+            }
+        }
+
         TriggerId++;
     }
 
-    LOG(INFO) << "calVec.size(): " << calVec.size();
+    //LOG(INFO) << "calVec.size(): " << calVec.size();
 
-    for(int loopi = 0; loopi < calVec.size(); loopi++) {
-        LOG(INFO) << "calVec.calibUserField: " << calVec[loopi].calibUserField;
-    }
+    //for(int loopi = 0; loopi < calVec.size(); loopi++) {
+    //    uint64_t tmp = calVec[loopi].calibUserField;
+    //    if((tmp != 0) && (tmp != calVec[loopi-1].calibUserField)) {
+    //        LOG(INFO) << "calVec.calibUserField: " << tmp;
+    //    }
+    //}
 
     //while (mDecoder->decodeNextTrigger()) {
     //    LOG(INFO) << "mTFCounter: " << mTFCounter << ", TriggerCounter in TF: " << TriggerId << ".";
